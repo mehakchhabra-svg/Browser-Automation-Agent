@@ -1,0 +1,46 @@
+import smtplib
+from email.message import EmailMessage
+import getpass
+
+print("=== EMAIL AUTOMATION AGENT ===")
+
+sender_email = input("Enter your email ID: ")
+password = getpass.getpass("Enter your email password (hidden): ")
+
+subject = input("Enter email subject: ")
+message_body = input("Enter email message: ")
+
+receiver_email = "scit121test@auditram.com"
+
+msg = EmailMessage()
+msg["From"] = sender_email
+msg["To"] = receiver_email
+msg["Subject"] = subject
+msg.set_content(message_body)
+
+if "gmail.com" in sender_email:
+    smtp_server = "smtp.gmail.com"
+    port = 587
+
+elif "outlook.com" in sender_email or "hotmail.com" in sender_email:
+    smtp_server = "smtp.office365.com"
+    port = 587
+
+elif "yahoo.com" in sender_email:
+    smtp_server = "smtp.mail.yahoo.com"
+    port = 587
+
+else:
+    print("Email provider not supported.")
+    exit()
+
+try:
+    server = smtplib.SMTP(smtp_server, port)
+    server.starttls()
+    server.login(sender_email, password)
+    server.send_message(msg)
+    server.quit()
+    print("EMAIL SENT SUCCESSFULLY!")
+
+except Exception as e:
+    print("ERROR:", e)
